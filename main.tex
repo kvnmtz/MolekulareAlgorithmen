@@ -4,6 +4,7 @@
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{csquotes}
 
 % Layout
 \usepackage{geometry}
@@ -18,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{gensymb}
 
 % Links
 \usepackage{hyperref}
@@ -38,15 +40,12 @@
 % Metadaten
 \newcommand{\university}{Friedrich-Schiller-Universität Jena}
 \newcommand{\faculty}{Fakultät für Mathematik und Informatik}
-\newcommand{\module}{Management of scientific data}
+\newcommand{\module}{Molekulare Algorithmen}
 \newcommand{\semester}{Sommersemester 2026}
-\newcommand{\papertitle}{Weak reciprocal relationships between productivity and plant biodiversity in managed grasslands}
-\newcommand{\submissiontitle}{FAIR analysis of \textit{\papertitle}}
+\newcommand{\submissiontitle}{Chemische Berechnung optimaler Öffnungswinkel}
 \newcommand{\studentname}{Juliane Thum, Patrick Stahl}
 \newcommand{\matrikelnummer}{200895, 198314}
-\newcommand{\lecturer}{Prof. Dr. Birgitta König-Ries}
-\newcommand{\persona}{<persona placeholder>}
-\newcommand{\projectdata}{<projectdata placeholder>}
+\newcommand{\lecturer}{PD Dr.-Ing. habil. Thomas Hinze}
 
 \begin{document}
 
@@ -55,14 +54,10 @@
 
     \vspace{1.5cm}
 
-    {\Large \university \par}
-    \vspace{0.3cm}
-    {\large \faculty \par}
-
-    \vspace{1cm}
-
-    \includegraphics[width=0.45\textwidth]{figures/logo.png}
+    \includegraphics[width=0.6\textwidth]{figures/Bildmarke_blue_23cm.png}
     \vspace{0.8cm}
+
+    {\large \faculty \par}
 
     {\large \module \par}
     \vspace{0.3cm}
@@ -89,9 +84,7 @@
 \newpage
 
 \input{sections/intro.tex}
-\input{sections/reprohack.tex}
-\input{sections/fair.tex}
-\input{sections/findings.tex}
+\input{sections/math_preamble.tex}
 \printbibliography
 \newpage
 \listoftables
