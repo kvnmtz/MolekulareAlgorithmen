@@ -1,0 +1,906 @@
+```tex
+\section{Konzeption des chemischen Analogcomputermodells zur Flächenberechnung}
+
+\subsection{Ziel der Modellierung}
+
+Aus der analytischen Vorbetrachtung ergibt sich für den maximalen
+Flächeninhalt
+
+\[
+A_{\max}(s)
+=
+\frac{\pi+\sqrt{\pi^2+4}}{4}s^2.
+\]
+
+Zur Vereinfachung definieren wir die Konstante
+
+\[
+C
+=
+\frac{\pi+\sqrt{\pi^2+4}}{4}.
+\]
+
+Damit lautet die zu implementierende Berechnungsvorschrift
+
+\[
+A_{\max}(s)=C s^2.
+\]
+
+Numerisch gilt
+
+\[
+C \approx 1.716446108.
+\]
+
+Das chemische Analogcomputermodell soll also nicht mehr die ursprüngliche
+geometrische Optimierung durchführen. Diese wurde bereits analytisch
+gelöst. Stattdessen soll das Reaktionssystem die daraus resultierende
+Berechnungsformel
+
+\[
+s \mapsto C s^2
+\]
+
+dynamisch realisieren.
+
+Die Eingangsgröße ist die Schenkellänge \(s\). Diese wird durch die
+Konzentration einer Eingabespezies \(S\) kodiert:
+
+\[
+[S]=s.
+\]
+
+Die Ausgabegröße ist der maximale Flächeninhalt. Dieser wird durch die
+Konzentration einer Ausgabespezies \(F\) kodiert:
+
+\[
+[F]\longrightarrow A_{\max}(s).
+\]
+
+Das Ziel ist daher, ein Reaktionssystem so zu konstruieren, dass im
+stationären Zustand gilt:
+
+\[
+[F]^*
+=
+C[S]^2.
+\]
+
+Dabei bezeichnet \([F]^*\) die Gleichgewichtskonzentration der
+Ausgabespezies \(F\).
+
+\subsection{Grundprinzip: Rechnen durch Konzentrationsdynamik}
+
+In einem chemischen Analogcomputermodell werden Zahlenwerte durch
+Konzentrationen chemischer Spezies dargestellt. Eine Berechnung wird nicht
+durch eine direkte algebraische Formel ausgewertet, sondern durch die
+Zeitentwicklung eines Reaktionsnetzwerks erzeugt.
+
+Das bedeutet: Die Ausgabe ist im Allgemeinen nicht sofort zu Beginn der
+Simulation korrekt. Stattdessen starten die Ausgabespezies mit
+vorgegebenen Anfangskonzentrationen, zum Beispiel bei \(0\), und nähern
+sich im Laufe der Modellzeit den gewünschten Zielwerten an.
+
+Für die Flächenberechnung soll also eine Spezies \(F\) konstruiert werden,
+deren Konzentration gegen
+
+\[
+C s^2
+\]
+
+konvergiert.
+
+Die Berechnung erfolgt modular. Zuerst wird aus der Eingabe \(s\) der
+Zwischenwert \(s^2\) erzeugt. Anschließend wird dieser Zwischenwert mit
+der Konstanten \(C\) skaliert.
+
+Die Rechenstruktur lautet daher:
+
+\[
+S
+\longrightarrow
+Q
+\longrightarrow
+F.
+\]
+
+Dabei steht
+
+\[
+[S]=s
+\]
+
+für die Eingabe,
+
+\[
+[Q]\longrightarrow s^2
+\]
+
+für den quadratischen Zwischenwert und
+
+\[
+[F]\longrightarrow C s^2
+\]
+
+für den maximalen Flächeninhalt.
+
+\subsection{Warum ein dynamisches Reaktionsmodell verwendet wird}
+
+Eine rein algebraische Modellierung wäre prinzipiell möglich. Man könnte
+die Ausgabe beispielsweise direkt durch
+
+\[
+F = C S^2
+\]
+
+definieren. Für die vorliegende Aufgabenstellung wäre dies jedoch
+inhaltlich unpassend, weil dann keine chemische Rechenstruktur entsteht.
+Das Ziel ist nicht nur die numerische Auswertung der Formel, sondern die
+Konstruktion eines chemischen Analogcomputermodells.
+
+Deshalb wird die Berechnung als dynamisches Reaktionssystem modelliert.
+Die mathematische Idee besteht darin, Spezies einzuführen, deren
+Konzentrationen stabile Gleichgewichtswerte besitzen. Diese
+Gleichgewichtswerte entsprechen den gewünschten Rechenergebnissen.
+
+Allgemein kann eine gewünschte Zielbeziehung
+
+\[
+X^* = g(\text{Eingaben})
+\]
+
+durch eine Differentialgleichung der Form
+
+\[
+\frac{dX}{dt}
+=
+g(\text{Eingaben})-X
+\]
+
+realisiert werden. Im stationären Zustand gilt
+
+\[
+\frac{dX}{dt}=0.
+\]
+
+Daraus folgt
+
+\[
+0=g(\text{Eingaben})-X
+\]
+
+und somit
+
+\[
+X^*=g(\text{Eingaben}).
+\]
+
+Der Term \(g(\text{Eingaben})\) wirkt als Produktionsterm, während der Term
+\(-X\) einen Abbau oder eine negative Rückkopplung beschreibt. Dadurch
+konvergiert \(X\) gegen den gewünschten Rechenwert.
+
+\subsection{Eingabespezies \(S\)}
+
+Die Schenkellänge \(s\) ist in der Aufgabenstellung eine frei wählbare,
+aber während einer Simulation feste Eingabegröße. Daher wird sie als
+Konzentration einer Eingabespezies \(S\) kodiert:
+
+\[
+[S](0)=s.
+\]
+
+Da \(s\) nicht durch die Berechnung verbraucht werden soll, wird \(S\) als
+konstante Eingabe behandelt. Das Reaktionssystem darf also von \(S\)
+abhängen, soll die Konzentration von \(S\) aber nicht verändern.
+
+Konzeptionell entspricht \(S\) damit einem Parameter oder einer
+chemostatisierten Spezies. Für jede gewählte Schenkellänge \(s\) wird eine
+entsprechende Konzentration von \(S\) vorgegeben. Das gleiche
+Reaktionsnetzwerk kann anschließend für verschiedene Werte von \(s\)
+simuliert werden.
+
+Beispiele wären
+
+\[
+[S]=0.5,\qquad [S]=1,\qquad [S]=2,\qquad [S]=5.
+\]
+
+Die Ausgabe \(F\) sollte dann jeweils gegen
+
+\[
+C\cdot 0.5^2,\qquad
+C\cdot 1^2,\qquad
+C\cdot 2^2,\qquad
+C\cdot 5^2
+\]
+
+konvergieren.
+
+\subsection{Quadratmodul}
+
+Der erste eigentliche Rechenschritt ist die Quadratbildung
+
+\[
+s \mapsto s^2.
+\]
+
+Dazu wird eine Zwischenspezies \(Q\) eingeführt. Ihre Konzentration soll im
+stationären Zustand dem Quadrat der Eingabekonzentration entsprechen:
+
+\[
+[Q]^*=[S]^2.
+\]
+
+Dies kann durch die Dynamik
+
+\[
+\frac{d[Q]}{dt}
+=
+[S]^2-[Q]
+\]
+
+realisiert werden.
+
+Der Produktionsterm
+
+\[
+[S]^2
+\]
+
+erzeugt \(Q\) mit einer Rate, die quadratisch von der Eingabe abhängt. Der
+Abbauterm
+
+\[
+-[Q]
+\]
+
+verhindert ein unbegrenztes Anwachsen von \(Q\) und stabilisiert den
+Rechenwert.
+
+Im stationären Zustand gilt
+
+\[
+\frac{d[Q]}{dt}=0.
+\]
+
+Damit folgt
+
+\[
+0=[S]^2-[Q].
+\]
+
+Also ist
+
+\[
+[Q]^*=[S]^2.
+\]
+
+Da \([S]=s\) gilt, erhält man
+
+\[
+[Q]^*=s^2.
+\]
+
+Damit implementiert \(Q\) den benötigten Zwischenwert \(s^2\).
+
+\subsection{Interpretation des Quadratmoduls als Reaktionssystem}
+
+Die Differentialgleichung
+
+\[
+\frac{d[Q]}{dt}
+=
+[S]^2-[Q]
+\]
+
+kann als Zusammenspiel zweier Reaktionsterme interpretiert werden.
+
+Der erste Term erzeugt \(Q\) mit einer Rate proportional zu \([S]^2\):
+
+\[
+\varnothing \longrightarrow Q.
+\]
+
+Die zugehörige Reaktionsrate ist konzeptionell
+
+\[
+v_1=[S]^2.
+\]
+
+Der zweite Term baut \(Q\) mit einer Rate proportional zu seiner eigenen
+Konzentration ab:
+
+\[
+Q \longrightarrow \varnothing.
+\]
+
+Die zugehörige Reaktionsrate ist
+
+\[
+v_2=[Q].
+\]
+
+Die Nettoänderung von \(Q\) ist daher
+
+\[
+\frac{d[Q]}{dt}=v_1-v_2=[S]^2-[Q].
+\]
+
+Dieses Modul besitzt eine stabile Gleichgewichtskonzentration. Ist
+\([Q]\) kleiner als \([S]^2\), dann ist
+
+\[
+[S]^2-[Q]>0,
+\]
+
+also steigt \([Q]\). Ist \([Q]\) größer als \([S]^2\), dann ist
+
+\[
+[S]^2-[Q]<0,
+\]
+
+also sinkt \([Q]\). Dadurch reguliert sich die Konzentration von \(Q\)
+selbstständig auf den gewünschten Wert ein.
+
+\subsection{Flächenmodul}
+
+Nach der Quadratbildung muss der Zwischenwert \(s^2\) mit der Konstanten
+
+\[
+C=
+\frac{\pi+\sqrt{\pi^2+4}}{4}
+\]
+
+multipliziert werden. Da \([Q]\) gegen \(s^2\) konvergiert, soll die
+Ausgabespezies \(F\) im stationären Zustand die Beziehung
+
+\[
+[F]^*=C[Q]^*
+\]
+
+erfüllen.
+
+Eine naheliegende dynamische Realisierung wäre
+
+\[
+\frac{d[F]}{dt}
+=
+C[Q]-[F].
+\]
+
+Im stationären Zustand gilt dann
+
+\[
+0=C[Q]-[F],
+\]
+
+also
+
+\[
+[F]^*=C[Q]^*.
+\]
+
+Da
+
+\[
+[Q]^*=s^2
+\]
+
+folgt daraus
+
+\[
+[F]^*=Cs^2=A_{\max}(s).
+\]
+
+Damit wäre die gewünschte Flächenberechnung erreicht.
+
+\subsection{Berücksichtigung der Begrenzung der Ratenkonstanten}
+
+Die Aufgabenstellung fordert, dass keine Ratenkonstante im verwendeten
+Reaktionssystem einen Wert größer als \(1\) besitzen darf. Die Konstante
+\(C\) ist jedoch
+
+\[
+C\approx1.716446108
+\]
+
+und damit größer als \(1\). Deshalb darf der Term \(C[Q]\) nicht einfach
+als einzelner Reaktionsterm mit der Ratenkonstante \(C\) umgesetzt werden.
+
+Stattdessen wird \(C\) in zwei Summanden zerlegt:
+
+\[
+C=1+c
+\]
+
+mit
+
+\[
+c=C-1.
+\]
+
+Einsetzen des Zahlenwerts ergibt
+
+\[
+c\approx0.716446108.
+\]
+
+Damit gilt
+
+\[
+C[Q]
+=
+(1+c)[Q]
+=
+[Q]+c[Q].
+\]
+
+Die Produktionsrate für \(F\) wird also nicht als ein einzelner Term mit
+der Ratenkonstante \(C>1\) modelliert, sondern als Summe zweier erlaubter
+Produktionsterme:
+
+\[
+[Q]
+\]
+
+und
+
+\[
+c[Q].
+\]
+
+Beide zugehörigen Ratenkonstanten erfüllen die Bedingung
+
+\[
+1\leq 1
+\]
+
+und
+
+\[
+c\approx0.716446108<1.
+\]
+
+Die Dynamik des Flächenmoduls lautet somit
+
+\[
+\frac{d[F]}{dt}
+=
+[Q]+c[Q]-[F].
+\]
+
+Dies ist äquivalent zu
+
+\[
+\frac{d[F]}{dt}
+=
+(1+c)[Q]-[F]
+\]
+
+und wegen \(1+c=C\) zu
+
+\[
+\frac{d[F]}{dt}
+=
+C[Q]-[F].
+\]
+
+Die Zerlegung verändert also nicht die mathematische Zielbeziehung,
+stellt aber sicher, dass keine einzelne Ratenkonstante größer als \(1\)
+verwendet wird.
+
+\subsection{Interpretation des Flächenmoduls als Reaktionssystem}
+
+Das Flächenmodul kann als drei Reaktionsterme interpretiert werden.
+
+Zunächst wird \(F\) mit einer Rate proportional zu \([Q]\) produziert:
+
+\[
+\varnothing \longrightarrow F,
+\]
+
+mit
+
+\[
+v_3=[Q].
+\]
+
+Zusätzlich wird \(F\) über einen zweiten parallelen Produktionskanal
+erzeugt:
+
+\[
+\varnothing \longrightarrow F,
+\]
+
+mit
+
+\[
+v_4=c[Q].
+\]
+
+Schließlich wird \(F\) mit einer Rate proportional zu seiner eigenen
+Konzentration abgebaut:
+
+\[
+F\longrightarrow\varnothing,
+\]
+
+mit
+
+\[
+v_5=[F].
+\]
+
+Die Nettoänderung von \(F\) ergibt sich damit zu
+
+\[
+\frac{d[F]}{dt}
+=
+v_3+v_4-v_5.
+\]
+
+Also
+
+\[
+\frac{d[F]}{dt}
+=
+[Q]+c[Q]-[F].
+\]
+
+Im stationären Zustand gilt
+
+\[
+0=[Q]+c[Q]-[F].
+\]
+
+Daher ist
+
+\[
+[F]^*=(1+c)[Q]^*.
+\]
+
+Da
+
+\[
+1+c=C
+\]
+
+folgt
+
+\[
+[F]^*=C[Q]^*.
+\]
+
+Mit
+
+\[
+[Q]^*=s^2
+\]
+
+erhält man schließlich
+
+\[
+[F]^*=Cs^2.
+\]
+
+Also gilt
+
+\[
+[F]^*
+=
+\frac{\pi+\sqrt{\pi^2+4}}{4}s^2
+=
+A_{\max}(s).
+\]
+
+Damit ist die Berechnung des maximalen Flächeninhalts durch das
+Reaktionssystem realisiert.
+
+\subsection{Gesamtdynamik des Flächenmodells}
+
+Das vollständige Modell für die Flächenberechnung besteht aus den beiden
+gekoppelten Differentialgleichungen
+
+\[
+\frac{d[Q]}{dt}
+=
+[S]^2-[Q]
+\]
+
+und
+
+\[
+\frac{d[F]}{dt}
+=
+[Q]+c[Q]-[F].
+\]
+
+Äquivalent kann man schreiben:
+
+\[
+\frac{d[Q]}{dt}
+=
+[S]^2-[Q],
+\]
+
+\[
+\frac{d[F]}{dt}
+=
+C[Q]-[F],
+\]
+
+wobei bei der tatsächlichen Reaktionsmodellierung der Faktor \(C\) durch
+die Zerlegung
+
+\[
+C=1+c
+\]
+
+realisiert wird.
+
+Die Eingabespezies \(S\) bleibt konstant:
+
+\[
+\frac{d[S]}{dt}=0.
+\]
+
+Damit ergibt sich das Gesamtsystem
+
+\[
+\boxed{
+\frac{d[S]}{dt}=0
+}
+\]
+
+\[
+\boxed{
+\frac{d[Q]}{dt}=[S]^2-[Q]
+}
+\]
+
+\[
+\boxed{
+\frac{d[F]}{dt}=[Q]+c[Q]-[F]
+}
+\]
+
+mit
+
+\[
+c
+=
+\frac{\pi+\sqrt{\pi^2+4}}{4}-1.
+\]
+
+Im stationären Zustand gilt
+
+\[
+[Q]^*=[S]^2
+\]
+
+und
+
+\[
+[F]^*=C[Q]^*.
+\]
+
+Daraus folgt
+
+\[
+[F]^*=C[S]^2.
+\]
+
+Da
+
+\[
+[S]=s
+\]
+
+gilt, erhält man
+
+\[
+[F]^*
+=
+C s^2
+=
+A_{\max}(s).
+\]
+
+\subsection{Warum eine Kaskadenstruktur verwendet wird}
+
+Die Modellierung erfolgt bewusst als Kaskade
+
+\[
+S
+\longrightarrow
+Q
+\longrightarrow
+F.
+\]
+
+Diese Struktur hat mehrere Vorteile.
+
+Erstens trennt sie die beiden Rechenschritte klar voneinander. Das
+Quadratmodul berechnet zunächst den Zwischenwert \(s^2\). Das
+Flächenmodul skaliert diesen Zwischenwert anschließend mit der Konstanten
+\(C\).
+
+Zweitens ist das Modell dadurch leichter überprüfbar. Bei einer Simulation
+kann man separat kontrollieren, ob
+
+\[
+[Q]\longrightarrow s^2
+\]
+
+und danach
+
+\[
+[F]\longrightarrow C s^2
+\]
+
+gilt.
+
+Drittens ist die Kaskade gut erweiterbar. Falls später weitere
+Berechnungsvorschriften oder zusätzliche Ausgaben ergänzt werden sollen,
+kann der Zwischenwert \(Q\) weiterverwendet werden.
+
+Viertens ist die spätere Analyse der chemischen Rechenzeit einfacher.
+Da \(F\) von \(Q\) abhängt, ist zu erwarten, dass \(F\) etwas langsamer
+gegen seinen Zielwert konvergiert als \(Q\). Diese Verzögerung ist ein
+natürlicher Effekt der Kaskadenstruktur und kann in den
+Simulationsstudien quantitativ untersucht werden.
+
+\subsection{Rolle der Abbaureaktionen}
+
+Die Abbaureaktionen sind ein zentraler Bestandteil des Modells. Ohne
+Abbau würden die Produkte \(Q\) und \(F\) unbegrenzt anwachsen.
+
+Für das Quadratmodul würde ohne Abbau beispielsweise gelten:
+
+\[
+\frac{d[Q]}{dt}=[S]^2.
+\]
+
+Bei konstantem \(S\) hätte dies die Lösung
+
+\[
+[Q](t)=[Q](0)+[S]^2t.
+\]
+
+Die Konzentration von \(Q\) würde also linear mit der Zeit wachsen und
+keinen stabilen Rechenwert darstellen.
+
+Erst durch den zusätzlichen Term
+
+\[
+-[Q]
+\]
+
+entsteht die stabile Dynamik
+
+\[
+\frac{d[Q]}{dt}=[S]^2-[Q].
+\]
+
+Analog verhindert der Term
+
+\[
+-[F]
+\]
+
+im Flächenmodul, dass \(F\) unbegrenzt anwächst. Stattdessen wird \(F\)
+auf den Zielwert
+
+\[
+C[Q]^*
+\]
+
+eingeregelt.
+
+Die Abbaureaktionen wirken daher als negative Rückkopplung. Sie sorgen
+dafür, dass die Rechenspezies stabile Gleichgewichtskonzentrationen
+besitzen.
+
+\subsection{Deterministische Modellierung}
+
+Für die erste Modellvariante wird eine deterministische Beschreibung
+verwendet. Dabei werden die Konzentrationen als kontinuierliche Größen
+aufgefasst, deren Zeitentwicklung durch gewöhnliche Differentialgleichungen
+beschrieben wird.
+
+Diese Wahl ist für das vorliegende Modell sinnvoll, weil die Aufgabe eine
+analoge Berechnung über Konzentrationen betrachtet. Die relevanten Größen
+sind keine einzelnen diskreten Moleküle, sondern kontinuierliche
+Konzentrationswerte, die gegen mathematische Zielwerte konvergieren.
+
+Eine stochastische Simulation wäre prinzipiell ebenfalls denkbar. Sie
+würde jedoch zufällige Fluktuationen einführen und die Auswertung der
+Rechengenauigkeit erschweren. Für die grundlegende Implementierung der
+Berechnungsvorschrift
+
+\[
+A_{\max}(s)=Cs^2
+\]
+
+ist daher zunächst das deterministische ODE-Modell die geeignetere Wahl.
+
+\subsection{Zusammenfassung des Flächenmodells}
+
+Das chemische Analogcomputermodell zur Flächenberechnung verwendet die
+Eingabespezies \(S\), die Zwischenspezies \(Q\) und die Ausgabespezies
+\(F\).
+
+Die Konzentration von \(S\) kodiert die Schenkellänge:
+
+\[
+[S]=s.
+\]
+
+Die Spezies \(Q\) berechnet das Quadrat der Eingabe:
+
+\[
+[Q]^*=[S]^2=s^2.
+\]
+
+Die Spezies \(F\) berechnet daraus den maximalen Flächeninhalt:
+
+\[
+[F]^*
+=
+C[Q]^*
+=
+Cs^2.
+\]
+
+Mit
+
+\[
+C=
+\frac{\pi+\sqrt{\pi^2+4}}{4}
+\]
+
+ergibt sich
+
+\[
+[F]^*
+=
+\frac{\pi+\sqrt{\pi^2+4}}{4}s^2
+=
+A_{\max}(s).
+\]
+
+Da
+
+\[
+C\approx1.716446108>1
+\]
+
+ist, wird der Faktor \(C\) nicht durch eine einzelne Ratenkonstante
+realisiert. Stattdessen wird
+
+\[
+C=1+c
+\]
+
+mit
+
+\[
+c\approx0.716446108
+\]
+
+verwendet. Dadurch bleiben alle Ratenkonstanten höchstens \(1\), wie es
+die Aufgabenstellung fordert.
+
+Die zentrale Modellstruktur lautet damit:
+
+\[
+S
+\longrightarrow
+Q
+\longrightarrow
+F,
+\]
+
+wobei \(S\) konstant gehalten wird, \(Q\) gegen \(s^2\) konvergiert und
+\(F\) gegen den maximalen Flächeninhalt \(A_{\max}(s)\) konvergiert.
+```
