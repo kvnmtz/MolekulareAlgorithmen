@@ -1,0 +1,382 @@
+\section{Chemische Modellierung}
+
+Nachdem im letzten Abschnitt die mathematischen Berechnungsvorschriften hergeleitet wurden, werden diese nun in ein chemisches Analogcomputermodell übersetzt. Dabei kodieren wir Zahlenwerte durch Konzentrationen chemischer Spezies. Die Berechnung erfolgt damit durch die zeitliche Entwicklung eines Reaktionssystems. Das Ziel ist es, ein Reaktionsnetzwerk zu konstruieren, dessen stabile Gleichgewichtskonzentrationen den gesuchten Rechenergebnissen entsprechen.Für eine Spezies \(X\), die gegen einen Zielwert \(g\) konvergieren soll,
+kann allgemein eine Dynamik der Form
+
+\begin{equation}
+    \frac{d[X]}{dt}
+    =
+    g - [X]
+\end{equation}
+
+verwendet werden. Im stationären Zustand (Konzentration der beteiligten Stoffe ändert sich nicht mehr) gilt
+
+\begin{equation}
+    \frac{d[X]}{dt}=0.
+\end{equation}
+
+Daraus folgt
+
+\begin{equation}
+    [X]^*=g.
+\end{equation}
+
+Der Produktionsterm \(g\) treibt die Spezies also in Richtung des
+gewünschten Zielwerts, während der Abbau proportional zu \([X]\) ein
+unbeschränktes Anwachsen verhindert und den Gleichgewichtswert stabilisiert.
+
+\subsection{Kodierung der Eingabe}
+
+Die Schenkellänge \(s\) wird durch die Konzentration einer Eingabespezies
+\(S\) kodiert:
+
+\begin{equation}
+    [S]=s.
+\end{equation}
+
+Da \(s\) eine frei wählbare Eingabegröße ist und während einer Simulation
+nicht verändert werden soll, wird \(S\) als konstante Spezies behandelt.
+Das Reaktionssystem darf also von \([S]\) abhängen, verändert \([S]\)
+selbst aber nicht. 
+
+\subsection{Modellierung des maximalen Flächeninhalts}
+
+Aus \eqref{eq:a_max} ergibt sich für den maximalen Flächeninhalt
+
+\begin{equation}
+    A_{\max}(s)
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}s^2.
+\end{equation}
+
+Zur besseren Lesbarkeit wird die Konstante
+
+\begin{equation}
+    C
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}
+    \approx 1.716446108.
+    \label{eq:C_definition}
+\end{equation}
+
+Damit kann die Berechnungsvorschrift kompakt als
+
+\begin{equation}
+    A_{\max}(s)=Cs^2
+\end{equation}
+
+geschrieben werden. Das chemische Modell muss also die Abbildung
+
+\begin{equation}
+    s \mapsto Cs^2
+\end{equation}
+
+realisieren. Dazu wird die Berechnung in zwei Teilschritte zerlegt:
+
+\begin{equation}
+    S \longrightarrow Q \longrightarrow F.
+\end{equation}
+
+Die Spezies \(Q\) dient als Zwischenspezies zur Berechnung von \(s^2\).
+Die Spezies \(F\) ist die Ausgabespezies für den maximalen Flächeninhalt.
+
+\subsubsection{Quadratmodul}
+
+Zunächst soll eine Spezies \(Q\) so konstruiert werden, dass im
+stationären Zustand
+
+\begin{equation}
+    [Q]^*=[S]^2
+\end{equation}
+
+gilt. Dafür wird die Dynamik
+
+\begin{equation}
+    \frac{d[Q]}{dt}
+    =
+    [S]^2-[Q]
+    \label{eq:Q_dynamik}
+\end{equation}
+
+verwendet. Im stationären Zustand folgt aus \eqref{eq:Q_dynamik}
+
+\begin{equation}
+    0=[S]^2-[Q]
+\end{equation}
+
+und damit
+
+\begin{equation}
+    [Q]^*=[S]^2=s^2.
+\end{equation}
+
+Dieses Verhalten wird durch zwei Reaktionsprozesse modelliert. \(Q\) wird mit einer Rate proportional zu \([S]^2\) produziert und mit einer Rate proportional zu seiner eigenen Konzentration abgebaut:
+
+\begin{equation}
+\begin{aligned}
+    Q &\xrightarrow{[Q]} \varnothing, \\
+    \varnothing &\xrightarrow{[S]^2} Q.
+\end{aligned}
+\end{equation}
+
+Die Kombination beider Reaktionen ergibt die gewünschte Dynamik
+\eqref{eq:Q_dynamik}. Ist \([Q]\) kleiner als \([S]^2\), so ist die
+Nettoänderung positiv und \([Q]\) steigt. Ist \([Q]\) größer als \([S]^2\),
+so ist die Nettoänderung negativ und \([Q]\) sinkt. Dadurch konvergiert
+\([Q]\) gegen den stabilen Zielwert \(s^2\).
+
+\subsubsection{Skalierungsmodul für die Fläche}
+
+Nachdem \(Q\) den Zwischenwert \(s^2\) berechnet, soll die Spezies \(F\)
+gegen den maximalen Flächeninhalt konvergieren. Es soll also gelten:
+
+\begin{equation}
+    [F]^*=C[Q]^*.
+\end{equation}
+
+Eine direkte Dynamik wäre
+
+\begin{equation}
+    \frac{d[F]}{dt}
+    =
+    C[Q]-[F].
+\end{equation}
+
+Da allerdings keine Ratenkonstante größer als \(1\) sein darf, wird die Konstante \(C\) wie folgt aufgeteilt. Es gilt
+
+\begin{equation}
+    C = 1+c
+    \label{eq:C_zerlegung}
+\end{equation}
+
+und damit 
+
+\begin{equation}
+    C[Q]
+    =
+    [Q]+c[Q].
+\end{equation}
+
+Die Produktion von \(F\) wird also durch zwei parallele Reaktionen
+realisiert und die Abbaugeschwindigkeit bleibt proportional zu \([F]\):
+
+\begin{equation}
+\begin{aligned}    
+    \varnothing &\xrightarrow{[Q]} F,\\
+    \varnothing &\xrightarrow{c[Q]} F,\\
+    F &\xrightarrow{[F]} \varnothing.
+\end{aligned}
+\end{equation}
+
+
+Damit ergibt sich insgesamt
+
+\begin{equation}
+    \frac{d[F]}{dt}
+    =
+    [Q]+c[Q]-[F].
+    \label{eq:F_dynamik}
+\end{equation}
+
+Mit \eqref{eq:C_zerlegung} können wir die Terme wieder zusammenfassen. Im stationären Zustand gilt dann analog zum vorherigen Modul
+
+\begin{equation}
+    [F]^*=C[Q]^*.
+\end{equation}
+
+Da \([Q]^*=s^2\) gilt, folgt
+
+\begin{equation}
+    [F]^*=Cs^2=A_{\max}(s).
+\end{equation}
+
+
+\subsection{Modellierung des optimalen Winkels}
+
+Neben dem maximalen Flächeninhalt soll auch der optimale Winkel ausgegeben
+werden. Aus \eqref{eq:alpha_max} ist bekannt, dass
+
+\begin{equation}
+    \alpha_{\max}
+    =
+    \pi-\arctan\left(\frac{2}{\pi}\right)
+\end{equation}
+
+gilt. Dieser Wert hängt nicht von \(s\) ab. Der Winkel muss daher nicht aus
+der Eingabespezies \(S\) berechnet werden, sondern kann als konstante
+Ausgabengröße modelliert werden.
+
+Um auch hier eine Konzentration als Ausgabe zu verwenden und zugleich die
+Beschränkung der Ratenkonstanten einzuhalten, wird statt dem direkten Winkel im Bogenmaß der normierte Winkel
+
+\begin{equation}
+    \Theta_n
+    =
+    \frac{\alpha_{\max}}{\pi}
+\end{equation}
+
+verwendet. Damit gilt
+
+\begin{equation}
+    \Theta_n
+    =
+    \frac{
+        \pi-\arctan\left(\frac{2}{\pi}\right)
+    }{\pi}\
+    \approx
+    0.819546.
+\end{equation}
+
+Dieser Wert liegt unter \(1\) und kann daher als zulässiger Produktionsterm
+verwendet werden. Für das Modell wird die Referenzkonstante
+
+\begin{equation}
+    \theta_{\mathrm{ref}}
+    =
+    \frac{
+        \pi-\arctan\left(\frac{2}{\pi}\right)
+    }{\pi}
+    \label{eq:theta_ref}
+\end{equation}
+
+eingeführt.
+
+Die Spezies \(\Theta_n\) soll gegen diesen Wert konvergieren. Dafür wird
+die Dynamik
+
+\begin{equation}
+    \frac{d[\Theta_n]}{dt}
+    =
+    \theta_{\mathrm{ref}}-[\Theta_n]
+    \label{eq:theta_dynamik}
+\end{equation}
+
+verwendet. Im stationären Zustand gilt damit
+
+\begin{equation}
+    [\Theta_n]^*=\theta_{\mathrm{ref}}.
+\end{equation}
+
+Dieses Modul wird durch eine konstante Produktion und einen linearen Abbau realisiert. Es gilt
+
+\begin{equation}
+\begin{aligned}
+    \varnothing &\xrightarrow{\theta_{\mathrm{ref}}} \Theta_n,\\
+    \Theta_n &\xrightarrow{[\Theta_n]} \varnothing.
+\end{aligned}
+\end{equation}
+Der tatsächliche Winkel kann aus der normierten Ausgabe durch multiplikation mit \(\pi\) zurückgewonnen werden. Es gilt 
+\begin{equation}
+    \alpha_{\max}=\pi\Theta_n.
+\end{equation}
+\subsection{Gesamtes Reaktionssystem}
+
+Das vollständige chemische Analogcomputermodell besteht aus der
+Eingabespezies \(S\), der Zwischenspezies \(Q\), der Flächenausgabe \(F\)
+und der normierten Winkelausgabe \(\Theta_n\). Die zugehörigen
+Differentialgleichungen lauten:
+
+\begin{align}
+    \frac{d[S]}{dt}
+    &=
+    0,
+    \label{eq:gesamt_S}
+    \\
+    \frac{d[Q]}{dt}
+    &=
+    [S]^2-[Q],
+    \label{eq:gesamt_Q}
+    \\
+    \frac{d[F]}{dt}
+    &=
+    [Q]+c[Q]-[F],
+    \label{eq:gesamt_F}
+    \\
+    \frac{d[\Theta_n]}{dt}
+    &=
+    \theta_{\mathrm{ref}}-[\Theta_n].
+    \label{eq:gesamt_theta}
+\end{align}
+
+Die Konstanten sind
+
+\begin{equation}
+    c
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}-1
+    \approx
+    0.716446108
+\end{equation}
+
+und
+
+\begin{equation}
+    \theta_{\mathrm{ref}}
+    =
+    \frac{
+        \pi-\arctan\left(\frac{2}{\pi}\right)
+    }{\pi}
+    \approx
+    0.819546.
+\end{equation}
+
+Die entsprechenden Reaktionen sind in Tabelle \ref{tab:reaktionen}
+zusammengefasst.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Reaktion & Reaktionsschema & Rate \\
+        \hline
+        \(R_1\) & \(\varnothing \rightarrow Q\) & \([S]^2\) \\
+        \(R_2\) & \(Q \rightarrow \varnothing\) & \([Q]\) \\
+        \(R_3\) & \(\varnothing \rightarrow F\) & \([Q]\) \\
+        \(R_4\) & \(\varnothing \rightarrow F\) & \(c[Q]\) \\
+        \(R_5\) & \(F \rightarrow \varnothing\) & \([F]\) \\
+        \(R_6\) & \(\varnothing \rightarrow \Theta_n\) & \(\theta_{\mathrm{ref}}\) \\
+        \(R_7\) & \(\Theta_n \rightarrow \varnothing\) & \([\Theta_n]\) \\
+    \end{tabular}
+    \caption{Reaktionen des chemischen Analogcomputermodells.}
+    \label{tab:reaktionen}
+\end{table}
+
+
+Das Gleichgewicht des Modells liefert die gesuchten Berechnungsergebnisse:
+
+\begin{equation}
+    [Q]^*=s^2,
+\end{equation}
+
+\begin{equation}
+    [F]^*
+    =
+    A_{\max}(s)
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}s^2,
+\end{equation}
+
+und
+
+\begin{equation}
+    [\Theta_n]^*
+    =
+    \frac{\alpha_{\max}}{\pi}.
+\end{equation}
+
+Damit werden sowohl die Flächenberechnung als auch die Winkelberechnung
+durch stabile Konzentrationen des Reaktionssystems implementiert.
+
+\subsection{Umsetzung in COPASI}
+
+Das beschriebene Reaktionssystem wurde anschließend in COPASI als
+deterministisches Reaktionsmodell umgesetzt. Die Eingabespezies \(S\)
+wurde dabei als konstante Spezies modelliert, während \(Q\), \(F\) und
+\(\Theta_n\) durch Reaktionen bestimmt werden. Für die Produktionsraten
+\([S]^2\), \(c[Q]\) und \(\theta_{\mathrm{ref}}\) wurden
+benutzerdefinierte kinetische Gesetze verwendet.
+
+Die Zeitentwicklung des Systems wurde als deterministischer Zeitverlauf
+simuliert. Die Spezies \(Q\), \(F\) und \(\Theta_n\) starten jeweils mit
+Anfangskonzentration \(0\) und konvergieren im Verlauf der Modellzeit gegen
+ihre jeweiligen Zielwerte. Die Simulationsergebnisse und die Bestimmung
+der chemischen Rechenzeit werden im folgenden Abschnitt untersucht.
