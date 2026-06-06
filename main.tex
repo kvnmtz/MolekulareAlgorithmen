@@ -62,13 +62,10 @@
 
     {\large \module \par}
     \vspace{0.3cm}
-    {\large \semester \par}
-
-    \vspace{2cm}
 
     {\Huge\bfseries \submissiontitle \par}
 
-    \vspace{2cm}
+    \vspace{1.5cm}
 
     \begin{tabular}{rl}
         Name: & \studentname \\
@@ -77,15 +74,21 @@
         Abgabedatum: & \today \\
     \end{tabular}
 
-    \vfill
+    \vspace{2cm}
+    \begin{abstract}
+        \noindent{\centering\textbf{Zusammenfassung}\par}
+        Diese Arbeit zeigt am Beispiel der Maximierung einer zusammengesetzten Fläche aus gleichschenkligem Dreieck und angelagertem Halbkreis gezeigt, wie mathematische Berechnungen in einem chemischen Analogcomputermodell durchgeführt werden können. Zunächst wird die mathematische Grundlage zur Bestimmung des optimalen Winkels und des maximalen Flächeninhalts hergeleitet. Darauf folgt die Übersetzung der Berechnungsvorschriften in ein chemisches Reaktionsnetzwerk, in dem Eingabe- und Ausgabewerte durch Spezieskonzentrationen kodiert werden. Die Implementierung des Modells, wird mithilfe zweier Simulationsstudien evaluiert.
+
+    \end{abstract}
 
 \end{titlepage}
 
-\tableofcontents
+
+
 \newpage
 
-\input{sections/intro.tex}\newpage
-\input{sections/math_preamble.tex}\newpage
+\input{sections/aufgabe.tex}\newpage
+\input{sections/mathematische_modellierung.tex}\newpage
 \input{sections/implementation.tex}\newpage
 \printbibliography
 \newpage

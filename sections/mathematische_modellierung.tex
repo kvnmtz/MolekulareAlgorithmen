@@ -1,0 +1,360 @@
+\section{Mathematische Modellierung}
+
+Im Folgenden wird die geometrische Problemstellung mathematisch beschrieben.
+Ziel ist es, zunächst den Flächeninhalt der zusammengesetzten Figur in
+Abhängigkeit von der Schenkellänge \(s\) und dem Winkel \(\alpha\) zu
+bestimmen. Anschließend wird der Winkel hergeleitet, bei dem dieser
+Flächeninhalt maximal wird.
+
+\subsection{Geometrische Vorüberlegungen}
+
+Das betrachtete Dreieck ist gleichschenklig. Die beiden gleich langen
+Schenkel besitzen jeweils die Länge \(s>0\). Der eingeschlossene Winkel
+zwischen diesen beiden Schenkeln ist \(\alpha\). Da der Winkel im Bereich
+von \(0^\circ\) bis \(180^\circ\) variiert werden kann, betrachten wir im
+Folgenden
+
+\begin{equation}
+    \alpha \in [0,\pi].
+\end{equation}
+
+Für die analytischen Rechnungen wird also das Bogenmaß verwendet. Die
+Umrechnung in Grad erfolgt über
+
+\begin{equation}
+    \alpha_{\degree} = \alpha \cdot \frac{180^\circ}{\pi}.
+\end{equation}
+
+Die Basisseite des Dreiecks besitzt die Länge \(2r\). Da das Dreieck
+gleichschenklig ist, halbiert die Höhe auf die Basisseite sowohl die
+Basisseite als auch den Winkel \(\alpha\). Dadurch entstehen zwei
+kongruente rechtwinklige Dreiecke. In einem dieser Teildreiecke ist \(s\)
+die Hypotenuse, \(r\) die halbe Basis und der Winkel an der Spitze beträgt
+\(\frac{\alpha}{2}\).
+
+Damit gilt
+
+\begin{equation}
+    \sin\left(\frac{\alpha}{2}\right)
+    =
+    \frac{r}{s}.
+\end{equation}
+
+Folglich ergibt sich der Radius des angelagerten Halbkreises zu
+
+\begin{equation}
+    r
+    =
+    s\sin\left(\frac{\alpha}{2}\right).
+    \label{eq:radius}
+\end{equation}
+
+Analog ergibt sich für die Höhe \(h\) des Dreiecks
+
+\begin{equation}
+    h
+    =
+    s\cos\left(\frac{\alpha}{2}\right).
+    \label{eq:hoehe}
+\end{equation}
+
+Diese beiden Beziehungen bilden die Grundlage für die Berechnung der
+Dreiecks- und Halbkreisfläche.
+
+\subsection{Flächenberechnung}
+
+Die Gesamtfläche setzt sich aus der Dreiecksfläche und der Halbkreisfläche
+zusammen. Es gilt also
+
+\begin{equation}
+    A(\alpha)
+    =
+    A_{\mathrm{dreieck}}(\alpha)
+    +
+    A_{\mathrm{halb}}(\alpha).
+    \label{eq:gesamtflaeche_summe}
+\end{equation}
+
+Zunächst wird die Fläche des Dreiecks betrachtet. Mit der Grundseite
+\(2r\) und der Höhe \(h\) gilt
+
+\begin{equation}
+    A_{\mathrm{dreieck}}
+    =
+    \frac{1}{2}\cdot 2r \cdot h
+    =
+    r h.
+\end{equation}
+
+Durch Einsetzen von \eqref{eq:radius} und \eqref{eq:hoehe} folgt
+
+\begin{equation}
+    A_{\mathrm{dreieck}}(\alpha)
+    =
+    s^2
+    \sin\left(\frac{\alpha}{2}\right)
+    \cos\left(\frac{\alpha}{2}\right).
+\end{equation}
+
+Mithilfe der trigonometrischen Identität ergibt sich
+
+\begin{equation}
+    A_{\mathrm{dreieck}}(\alpha)
+    =
+    \frac{1}{2}s^2\sin(\alpha).
+    \label{eq:dreiecksflaeche}
+\end{equation}
+
+Der an die Basisseite angelagerte Halbkreis besitzt den Radius \(r\).
+Da die Fläche eines Kreises mit Radius \(r\) gleich \(\pi r^2\) ist, gilt
+für den Halbkreis
+
+\begin{equation}
+    A_{\mathrm{halb}}
+    =
+    \frac{1}{2}\pi r^2.
+\end{equation}
+
+Mit \eqref{eq:radius} folgt
+
+\begin{equation}
+    A_{\mathrm{halb}}(\alpha)
+    =
+    \frac{1}{2}\pi s^2
+    \sin^2\left(\frac{\alpha}{2}\right).
+    \label{eq:halbkreisflaeche}
+\end{equation}
+
+Die Gesamtfläche erhält man nun durch Einsetzen von
+\eqref{eq:dreiecksflaeche} und \eqref{eq:halbkreisflaeche} in
+\eqref{eq:gesamtflaeche_summe}:
+
+\begin{equation}
+    A(\alpha)
+    =
+    \frac{1}{2}s^2\sin(\alpha)
+    +
+    \frac{1}{2}\pi s^2
+    \sin^2\left(\frac{\alpha}{2}\right).
+    \label{eq:gesamtflaeche_halbwinkel}
+\end{equation}
+
+Zur weiteren Berechnung vereinfachen wir die Formel. Mit
+
+\begin{equation}
+    \sin^2\left(\frac{\alpha}{2}\right)
+    =
+    \frac{1-\cos(\alpha)}{2}
+\end{equation}
+
+ergibt sich
+
+\begin{equation}
+    A(\alpha)
+    =
+    \frac{1}{2}s^2\sin(\alpha)
+    +
+    \frac{1}{4}\pi s^2
+    \left(1-\cos(\alpha)\right).
+\end{equation}
+
+Durch Ausklammern von \(\frac{s^2}{4}\) folgt die für die Optimierung
+verwendete Darstellung
+
+\begin{equation}
+    A(\alpha)
+    =
+    \frac{s^2}{4}
+    \left(
+        2\sin(\alpha)
+        +
+        \pi\left(1-\cos(\alpha)\right)
+    \right).
+    \label{eq:gesamtflaeche}
+\end{equation}
+
+\subsection{Winkelberechnung}
+
+Gesucht ist nun der Winkel \(\alpha\), für den die Gesamtfläche $A(\alpha)$ maximal wird. Da \(s>0\) gilt, ist \(s^2\) eine positive Konstante; der optimale Winkel hängt somit nicht von der Schenkellänge \(s\) ab. Zur Bestimmung des Maximums wird \eqref{eq:gesamtflaeche} nach \(\alpha\)
+abgeleitet:
+
+\begin{equation}
+    A'(\alpha)
+    =
+    \frac{s^2}{4}
+    \left(
+        2\cos(\alpha)
+        +
+        \pi\sin(\alpha)
+    \right).
+    \label{eq:erste_ableitung}
+\end{equation}
+
+Ein inneres Extremum erfüllt
+
+\begin{equation}
+    A'(\alpha)=0.
+\end{equation}
+
+Da \(\frac{s^2}{4}>0\) gilt, ist dies äquivalent zu
+
+\begin{equation}
+    2\cos(\alpha)
+    +
+    \pi\sin(\alpha)
+    =
+    0.
+\end{equation}
+
+Umstellen liefert
+
+\begin{equation}
+    2\cos(\alpha)
+    =
+    -\pi\sin(\alpha).
+\end{equation}
+
+Für \(\alpha\in(0,\pi)\) gilt \(\sin(\alpha)>0\). Daher kann durch
+\(\sin(\alpha)\) dividiert werden. Es folgt
+
+\begin{equation}
+    \tan(\alpha)
+    =
+    -\frac{2}{\pi}.
+\end{equation}
+
+Da \(\tan(\alpha)<0\) ist und \(\alpha\in(0,\pi)\) gilt, liegt der gesuchte
+Winkel im zweiten Quadranten. Somit ergibt sich
+
+\begin{equation}
+    \alpha_{\max}
+    =
+    \pi
+    -
+    \arctan\left(\frac{2}{\pi}\right).
+    \label{eq:alpha_max}
+\end{equation}
+
+Numerisch entspricht $\alpha_{\max}$ damit jeweils im Bogen- und Gradmaß:
+
+\begin{equation}
+    \alpha_{\max}
+    \approx
+    2.574681149\ 
+    \approx
+    147.52^\circ
+\end{equation}
+
+Zur Überprüfung, dass es sich tatsächlich um ein Maximum handelt, wird die
+zweite Ableitung betrachtet. Aus \eqref{eq:erste_ableitung} folgt
+
+\begin{equation}
+    A''(\alpha)
+    =
+    \frac{s^2}{4}
+    \left(
+        -2\sin(\alpha)
+        +
+        \pi\cos(\alpha)
+    \right).
+\end{equation}
+
+Für den Winkel \(\alpha_{\max}\) liegt \(\alpha\) im zweiten Quadranten.
+Deshalb sind sowohl \(\sin(\alpha_{\max})>0\) als auch \(\cos(\alpha_{\max})<0\) und es gilt:
+
+\begin{equation}
+    A''(\alpha_{\max})<0.
+\end{equation}
+
+Der gefundene Winkel beschreibt also ein lokales Maximum. Da an den
+Randpunkten \(\alpha=0\) und \(\alpha=\pi\) keine größere Fläche entsteht,
+ist dieses Maximum zugleich das globale Maximum im betrachteten
+Winkelbereich.
+
+\subsection{Maximaler Flächeninhalt}
+
+Zur Berechnung des maximalen Flächeninhalts wird
+\eqref{eq:alpha_max} in \eqref{eq:gesamtflaeche} eingesetzt. Setze dazu
+
+\begin{equation}
+    \beta
+    =
+    \arctan\left(\frac{2}{\pi}\right).
+\end{equation}
+
+Dann gilt
+
+\begin{equation}
+    \alpha_{\max}
+    =
+    \pi-\beta.
+\end{equation}
+
+Aus
+
+\begin{equation}
+    \tan(\beta)=\frac{2}{\pi}
+\end{equation}
+
+folgen
+
+\begin{equation}
+    \sin(\beta)
+    =
+    \frac{2}{\sqrt{\pi^2+4}}
+\end{equation}
+
+und
+
+\begin{equation}
+    \cos(\beta)
+    =
+    \frac{\pi}{\sqrt{\pi^2+4}}.
+\end{equation}
+
+Da \(\alpha_{\max}=\pi-\beta\) gilt, erhalten wir
+
+\begin{equation}
+    \sin(\alpha_{\max})
+    =
+    \frac{2}{\sqrt{\pi^2+4}}
+\end{equation}
+
+und
+
+\begin{equation}
+    \cos(\alpha_{\max})
+    =
+    -\frac{\pi}{\sqrt{\pi^2+4}}.
+\end{equation}
+
+Einsetzen in \eqref{eq:gesamtflaeche} liefert
+
+\begin{equation}
+    A_{\max}(s)
+    =
+    \frac{s^2}{4}
+    \left(
+        2\cdot \frac{2}{\sqrt{\pi^2+4}}
+        +
+        \pi
+        \left(
+            1
+            -
+            \left(
+                -\frac{\pi}{\sqrt{\pi^2+4}}
+            \right)
+        \right)
+    \right).
+\end{equation}
+
+Nach Zusammenfassen der Terme ergibt sich als gesuchte Berechnungsvorschrift für den maximalen Flächeninhalt
+
+\begin{equation}
+    A_{\max}(s)
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}s^2.
+    \label{eq:a_max}
+\end{equation}
+
+
