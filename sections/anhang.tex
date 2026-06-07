@@ -1,0 +1,110 @@
+\appendix
+
+\section{COPASI-Modell}
+
+Im Folgenden werden die für die Implementierung relevanten
+COPASI-Definitionen tabellarisch zusammengefasst. Das vollständige Projekt
+inklusive COPASI-Modell und Auswertungsdateien ist öffentlich auf GitHub
+verfügbar: \url{https://github.com/PatrickStahl/MolekulareAlgorithmen}
+
+\subsection{Benutzerdefinierte Funktionen}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Name & Typ & Mathematische Beschreibung \\
+        \hline
+        \texttt{v\_square} & userdefined & \texttt{S*S} \\
+        \texttt{v\_scaled\_Q} & userdefined & \texttt{c * Q} \\
+        \texttt{v\_const\_theta} & userdefined & \texttt{theta\_ref} \\
+    \end{tabular}
+    \caption{Benutzerdefinierte kinetische Funktionen in COPASI.}
+    \label{tab:copasi_functions}
+\end{table}
+
+\subsection{Spezies}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        Name & Kompartiment & Typ & Anfangskonzentration \\
+        \hline
+        \texttt{S} & \texttt{cell} & fixed & \(s\), exemplarisch \(2\) \\
+        \texttt{Q} & \texttt{cell} & reactions & \(0\) \\
+        \texttt{F} & \texttt{cell} & reactions & \(0\) \\
+        \texttt{Theta\_n} & \texttt{cell} & reactions & \(0\) \\
+    \end{tabular}
+    \caption{Im Modell verwendete Spezies.}
+    \label{tab:copasi_species}
+\end{table}
+
+\subsection{Globale Größen}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Name & Typ & Wert \\
+        \hline
+        \texttt{c\_area} & fixed & \(0.716446108\) \\
+        \texttt{theta\_ref} & fixed & \(0.819545628\) \\
+    \end{tabular}
+    \caption{Globale Modellparameter.}
+    \label{tab:copasi_global_quantities}
+\end{table}
+
+\subsection{Reaktionen}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Name & Reaktionsschema & Rate Law \\
+        \hline
+        \texttt{R\_Q\_prod} & \(\varnothing \rightarrow Q;\ S\) & \texttt{v\_square} \\
+        \texttt{R\_Q\_deg} & \(Q \rightarrow \varnothing\) & Mass action, \(k=1\) \\
+        \texttt{R\_F\_prod\_1} & \(\varnothing \rightarrow F;\ Q\) & \texttt{v\_scaled\_Q} \\
+        \texttt{R\_F\_prod\_c} & \(\varnothing \rightarrow F;\ Q\) & \texttt{v\_scaled\_Q} \\
+        \texttt{R\_F\_deg} & \(F \rightarrow \varnothing\) & Mass action, \(k=1\) \\
+        \texttt{R\_Theta\_prod} & \(\varnothing \rightarrow \Theta_n\) & \texttt{v\_const\_theta} \\
+        \texttt{R\_Theta\_deg} & \(\Theta_n \rightarrow \varnothing\) & Mass action, \(k=1\) \\
+    \end{tabular}
+    \caption{Reaktionen des COPASI-Modells. Spezies hinter dem Semikolon
+    wirken als Modifier und werden durch die jeweilige Reaktion nicht
+    verbraucht.}
+    \label{tab:copasi_reactions}
+\end{table}
+
+\subsection{Parameterzuordnungen der Reaktionen}
+
+Da die Funktion \texttt{v\_scaled\_Q} mehrfach verwendet wird, sind die
+jeweiligen Parameterzuordnungen in Tabelle
+\ref{tab:copasi_parameter_mapping} separat aufgeführt.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c|c}
+        Reaktion & Funktionssymbol & Zugeordnetes Modellobjekt / Wert \\
+        \hline
+        \texttt{R\_Q\_prod} & \texttt{S} & Spezies \texttt{S} \\
+        \texttt{R\_F\_prod\_1} & \texttt{Q} & Spezies \texttt{Q} \\
+        \texttt{R\_F\_prod\_1} & \texttt{c} & \(1\) \\
+        \texttt{R\_F\_prod\_c} & \texttt{Q} & Spezies \texttt{Q} \\
+        \texttt{R\_F\_prod\_c} & \texttt{c} & globale Größe \texttt{c\_area} \\
+        \texttt{R\_Theta\_prod} & \texttt{theta\_ref} & globale Größe \texttt{theta\_ref} \\
+    \end{tabular}
+    \caption{Relevante Parameterzuordnungen der benutzerdefinierten
+    kinetischen Funktionen.}
+    \label{tab:copasi_parameter_mapping}
+\end{table}
+
+Die Zuordnung in Tabelle \ref{tab:copasi_parameter_mapping} stellt
+insbesondere sicher, dass für die Flächenausgabe zwei parallele
+Produktionsreaktionen mit den Raten \([Q]\) und \(c[Q]\) verwendet werden.
+Damit ergibt sich insgesamt
+
+\[
+    \frac{d[F]}{dt}
+    =
+    [Q]+c[Q]-[F].
+\]
+
+Alle verwendeten Ratenkonstanten besitzen Werte kleiner oder gleich \(1\).

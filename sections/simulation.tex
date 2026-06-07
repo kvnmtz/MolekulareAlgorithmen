@@ -14,48 +14,70 @@ Anfangskonzentration \(0\) initialisiert.
 
 \subsection{Studie 1: Validierung der Berechnung für verschiedene Eingaben}
 
-In der ersten Simulationsstudie wurde überprüft, ob das Modell für
-verschiedene Werte der Eingabespezies \(S\) die erwarteten stationären
-Werte liefert. Dazu wurde ein Parameter-Scan über die Anfangskonzentration
-von \(S\) durchgeführt. Für jeden Eingabewert wurde ein Zeitverlauf bis zur
-Modellzeit $T = \text{30}$ mit einer Intervallgröße von \(\Delta t = \text{0.1}\) Zeiteinheiten und 300 Intervallen simuliert. Am Ende der Simulation wurden die Werte der Spezies \(Q\), \(F\) und \(\Theta_n\) mit den theoretisch erwarteten Gleichgewichtswerten verglichen. Die Ergebnisse des Parameter-Scans sind in Tabelle in\ref{tab:studie1_parameter_scan} dargestellt. (TODO: adde theoretische Werte in die Tabelle)
+In der ersten Simulationsstudie wurde überprüft, ob das Modell für verschiedene Werte der Eingabespezies \(S\) die erwarteten stationären Werte liefert. Dazu wurde ein Parameter-Scan über die Anfangskonzentration von \(S\) durchgeführt. Für jeden Eingabewert wurde ein Zeitverlauf bis zur Modellzeit $T=30$ mit einer Intervallgröße von $\Delta t = 0.1$ und $300$ Intervallen simuliert. Die im Modell berechneten Konzentrationen besitzen folgende Bedeutung: Die Spezies \(Q\) soll gegen den Quadratwert der Eingabe konvergieren,
+
+\begin{equation}
+    [Q]^* = s^2.
+\end{equation}
+
+Die Spezies \(F\) repräsentiert den maximalen Flächeninhalt und soll gegen
+
+\begin{equation}
+    [F]^*
+    =
+    A_{\max}(s)
+    =
+    \frac{\pi+\sqrt{\pi^2+4}}{4}s^2
+\end{equation}
+
+konvergieren. Die Spezies \(\Theta_n\) kodiert den normierten optimalen
+Winkel. Da der optimale Winkel unabhängig von \(s\) ist, ist auch der
+Zielwert von \(\Theta_n\) für alle Eingabewerte gleich:
+
+\begin{equation}
+    [\Theta_n]^*
+    =
+    \frac{
+        \pi-\arctan\left(\frac{2}{\pi}\right)
+    }{\pi}
+    \approx
+    0.819546.
+\end{equation}
+
+Am Ende der Simulation wurden die Werte der Spezies \(Q\), \(F\) und
+\(\Theta_n\) mit den theoretisch erwarteten Gleichgewichtswerten
+verglichen. Die Ergebnisse des Parameter-Scans sind in Tabelle
+\ref{tab:studie1_parameter_scan} dargestellt. Die Simulationsergebnisse zeigen, dass alle berechneten Werte der Spezies \(Q\), \(F\) und \(\Theta_n\) mit den theoretisch erwarteten Gleichgewichtswerten übereinstimmen.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{c|c|c|c|c}
+    \small
+    \begin{tabular}{c|c|c|c|c|c|c}
         \(s=[S]_0\) &
-        \(t\) &
-        \([Q](t)\) &
-        \([F](t)\) &
-        \([\Theta_n](t)\) \\
+        \([Q](30)\) &
+        \([Q]^*\) &
+        \([F](30)\) &
+        \([F]^*=A_{\max}(s)\) &
+        \([\Theta_n](30)\) &
+        \([\Theta_n]^*\) \\
         \hline
-        0.5 & 30 & 0.25 & 0.429112 & 0.819546 \\
-        1	&30	&1&	1.71645	& 0.819546 \\
-        2	&30	&4	&6.86578	&0.819546 \\
-        3	&30	&9	&15.448	&0.819546 \\
-        5	&30	&25	&42.9112	&0.819546 \\
+        0.5 & 0.25 & 0.25 & 0.429112 & 0.429112 & 0.819546 & 0.819546 \\
+        1   & 1    & 1    & 1.71645  & 1.71645  & 0.819546 & 0.819546 \\
+        2   & 4    & 4    & 6.86578  & 6.86578  & 0.819546 & 0.819546 \\
+        3   & 9    & 9    & 15.4480  & 15.4480  & 0.819546 & 0.819546 \\
+        5   & 25   & 25   & 42.9112  & 42.9112  & 0.819546 & 0.819546 \\
     \end{tabular}
-    \caption{Endwerte des Parameter-Scans zur Modellzeit \(t=30\).}
+    \caption{Endwerte des Parameter-Scans zur Modellzeit \(t=30\) im Vergleich mit den theoretischen Gleichgewichtswerten.}
     \label{tab:studie1_parameter_scan}
 \end{table}
 
-Die Simulationsergebnisse zeigen, dass die Spezies \(Q\) für alle
-betrachteten Eingaben gegen \(s^2\) konvergiert. Die Ausgabespezies \(F\)
-nähert sich entsprechend dem theoretischen Wert \(A_{\max}(s)\). Die
-normierte Winkelausgabe \(\Theta_n\) bleibt unabhängig von \(s\) konstant,
-wie es aufgrund der mathematischen Herleitung zu erwarten ist. Damit
-bestätigt die erste Studie die korrekte Implementierung der
-Berechnungsvorschriften.
+
 
 \subsection{Studie 2: Bestimmung der chemischen Rechenzeit}
 
 In der zweiten Simulationsstudie wurde untersucht, nach welcher Modellzeit
 alle relevanten Ausgabespezies eine Genauigkeit von \(99.9\,\%\) erreichen.
-Dazu wurde ein repräsentativer Eingabewert $s = 2$ verwendet und ein Zeitverlauf mit feiner Schrittweite simuliert.
-
-Ein Ergebnis gilt als mit \(99.9\,\%\) Genauigkeit vorliegend, wenn der
-relative Fehler höchstens \(0.001\) beträgt. Für eine Ausgabespezies \(X\)
-mit Zielwert \(X^*\) bedeutet dies
+Dazu wurde exemplarisch der Eingabewert $s=2$ verwendet. Für diesen Eingabewert gelten die Zielwerte $[Q]^*=4$, $[F]^* \approx 6.865784432$ und $[\Theta_n]^* \approx 0.819546$ wie in Tabelle \ref{tab:studie1_parameter_scan} bereits dargestellt. Ein Ergebnis gilt als mit \(99.9\,\%\) Genauigkeit vorliegend, wenn der relative Fehler höchstens \(0.001\) beträgt. Für eine Ausgabespezies \(X\) mit Zielwert \(X^*\) bedeutet dies
 
 \begin{equation}
     \frac{|X^* - X(t)|}{X^*}
@@ -70,116 +92,103 @@ konvergieren, kann äquivalent geprüft werden, ob
     X(t)\geq 0.999X^*
 \end{equation}
 
-gilt.
+gilt. 
 
-Die verwendeten Zielwerte und die entsprechenden \(99.9\,\%\)-Schwellen
-sind in Tabelle \ref{tab:studie2_schwellen} dargestellt.
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{c|c|c}
-        Spezies & Zielwert \(X^*\) & \(99.9\,\%\)-Schwelle \(0.999X^*\) \\
-        \hline
-        \(Q\) & 4 & 3.996 \\
-        \(F\) & 6.865784432 & 6.858918648 \\
-        \(\Theta_n\) & 0.819546 & 0.8187269 \\
-    \end{tabular}
-    \caption{Zielwerte und \(99.9\,\%\)-Schwellen für die Bestimmung der
-    chemischen Rechenzeit.}
-    \label{tab:studie2_schwellen}
-\end{table}
-
-Anschließend wurde aus dem simulierten Zeitverlauf jeweils die erste
-Modellzeit bestimmt, zu der die entsprechende Spezies ihre
-\(99.9\,\%\)-Schwelle erreicht. Die Ergebnisse sind in Tabelle
-\ref{tab:studie2_rechenzeit} zusammengefasst.
+Tabelle \ref{tab:studie1_parameter_scan} zeigt für jede Spezies jeweils den exakten Zielwert \(X^*\), den Wert, der mindestens vorliegen muss um eine Genauigkeit von \(99.9\,\%\) zu erreichen, sowie die erste Modellzeit, zu der dieser Wert erreicht wurde exemplarisch für \(s=2\). 
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{c|c|c}
-        Spezies & erste Modellzeit mit \(X(t)\geq0.999X^*\) & Bemerkung \\
+    \begin{tabular}{c|c|c|c}
+        Spezies &
+        Zielwert \(X^*\) &
+        \(99.9\,\%\)-Schwelle  &
+        erste beobachtete Modellzeit \\
+
         \hline
-        \(Q\) & 7 & Quadratwert \(s^2\) \\
-        \(F\) & 9.3 & maximaler Flächeninhalt \\
-        \(\Theta_n\) & 7 & normierter optimaler Winkel \\
+        \(Q\)        & 4           & 3.996       & 7.0 \\
+        \(F\)        & 6.865784432 & 6.858918648 & 9.3 \\
+        \(\Theta_n\) & 0.819546    & 0.818727    & 7.0 \\
     \end{tabular}
-    \caption{Bestimmung der Modellzeit bis zum Erreichen einer
-    Genauigkeit von \(99.9\,\%\).}
+    \caption{Bestimmung der Modellzeit bis zum Erreichen einer Genauigkeit von \(99.9\,\%\) für \(s=2\).}
     \label{tab:studie2_rechenzeit}
 \end{table}
 
-Die chemische Rechenzeit des Gesamtmodells wird durch die langsamste der
-betrachteten Ausgabespezies bestimmt. Damit gilt
+Die simulativ beobachtete Rechenzeit kann anhand der Differentialgleichung
+für \(Q\) nachvollzogen werden. Für \(s=2\) gilt im stationären Zustand
+$[Q]^* = s^2 = 4$. Die Dynamik von \(Q\) ist durch
 
 \begin{equation}
-    t_{\mathrm{chem}}
+    \frac{d[Q]}{dt}
     =
-    \max
-    \left\{
-        t_Q,\,
-        t_F,\,
-        t_{\Theta_n}
-    \right\}.
+    [Q]^*-[Q]
 \end{equation}
 
-Aus den Simulationsergebnissen folgt
+gegeben. Da \(Q\) mit der Anfangskonzentration \([Q](0)=0\) initialisiert
+wird, ergibt sich die Lösung
 
 \begin{equation}
-    t_{\mathrm{chem}}
+    [Q](t)
     =
-    \text{9.3}.
-\end{equation}
-
-Die langsamste Konvergenz tritt bei der Flächenausgabe \(F\) auf. Dies ist
-dadurch erklärbar, dass \(F\) nicht direkt aus der Eingabe \(S\), sondern
-über die Zwischenspezies \(Q\) berechnet wird. Das Modell besitzt also für
-die Flächenberechnung eine Kaskadenstruktur
-
-\begin{equation}
-    S \longrightarrow Q \longrightarrow F.
-\end{equation}
-
-Dadurch reagiert \(F\) verzögert auf die Annäherung von \(Q\) an seinen
-Gleichgewichtswert.
-
-Ergänzend kann die Rechenzeit analytisch aus der Struktur des
-Differentialgleichungssystems nachvollzogen werden. Für \(Q\) und
-\(\Theta_n\) ergibt sich jeweils eine Konvergenz der Form
-
-\begin{equation}
-    X(t)=X^*\left(1-e^{-t}\right).
-\end{equation}
-
-Die Bedingung \(X(t)\geq0.999X^*\) führt auf
-
-\begin{equation}
-    t\geq \ln(1000)\approx6.91.
-\end{equation}
-
-Für die Flächenausgabe \(F\) ergibt sich aufgrund der Kaskade
-
-\begin{equation}
-    F(t)
-    =
-    F^*
+    [Q]^*
     \left(
-        1-(1+t)e^{-t}
+        1-e^{-t}
     \right).
+    \label{eq:Q_loesung}
 \end{equation}
 
-Die Bedingung \(F(t)\geq0.999F^*\) führt auf
+Zur Bestimmung der Modellzeit bis \(99.9\,\%\) Genauigkeit wird
+\eqref{eq:Q_loesung} in die Bedingung
 
 \begin{equation}
-    (1+t)e^{-t}\leq0.001.
+    [Q](t)\geq0.999[Q]^*
 \end{equation}
 
-Daraus ergibt sich näherungsweise
+eingesetzt. Dadurch folgt
 
 \begin{equation}
-    t\approx9.24.
+    [Q]^*
+    \left(
+        1-e^{-t}
+    \right)
+    \geq
+    0.999[Q]^*.
 \end{equation}
 
-Dieses Ergebnis stimmt mit der simulativ bestimmten chemischen Rechenzeit
-überein. Somit liegen alle berechneten Ausgaben nach ungefähr
-\(\text{9.3}\) Modellzeiteinheiten mit einer Genauigkeit
-von mindestens \(99.9\,\%\) vor.
+Da \([Q]^*>0\) gilt, kann durch \([Q]^*\) dividiert werden:
+
+\begin{equation}
+    1-e^{-t}
+    \geq
+    0.999.
+\end{equation}
+
+Umstellen liefert
+
+\begin{equation}
+    e^{-t}
+    \leq
+    0.001.
+\end{equation}
+
+Durch Logarithmieren erhält man
+
+\begin{equation}
+    t
+    \geq
+    \ln(1000).
+\end{equation}
+
+Damit ergibt sich
+
+\begin{equation}
+    t
+    \geq
+    6.91.
+\end{equation}
+
+Für \(Q\) wird theoretisch also erwartet, dass die
+\(99.9\,\%\)-Schwelle nach etwa \(6.91\) Modellzeiteinheiten erreicht wird.
+Die in Tabelle \ref{tab:studie2_rechenzeit} beobachtete erste Modellzeit
+von \(t=7.0\) stimmt damit überein. Die leichte Abweichung ergibt sich
+daraus, dass der simulierte Zeitverlauf mit einer endlichen Schrittweite
+ausgewertet wurde. Analog dazu könnte auch für Spezies \(F\) und \(\Theta_n\) die theoretische Rechenzeit bestimmt werden, aus didaktischen Gründen wird dies hier jedoch nicht weiter ausgeführt.
