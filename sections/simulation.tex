@@ -94,7 +94,7 @@ konvergieren, kann äquivalent geprüft werden, ob
 
 gilt. 
 
-Tabelle \ref{tab:studie1_parameter_scan} zeigt für jede Spezies jeweils den exakten Zielwert \(X^*\), den Wert, der mindestens vorliegen muss um eine Genauigkeit von \(99.9\,\%\) zu erreichen, sowie die erste Modellzeit, zu der dieser Wert erreicht wurde exemplarisch für \(s=2\). 
+Tabelle \ref{tab:studie2_rechenzeit} zeigt für jede Spezies jeweils den exakten Zielwert \(X^*\), den Wert, der mindestens vorliegen muss um eine Genauigkeit von \(99.9\,\%\) zu erreichen, sowie die erste Modellzeit, zu der dieser Wert erreicht wurde exemplarisch für \(s=2\). 
 
 \begin{table}[h]
     \centering
@@ -123,9 +123,10 @@ $[Q]^* = s^2 = 4$. Die Dynamik von \(Q\) ist durch
     [Q]^*-[Q]
 \end{equation}
 
-gegeben. Da \(Q\) mit der Anfangskonzentration \([Q](0)=0\) initialisiert
-wird, ergibt sich die Lösung
-
+Da es sich hierbei um eine lineare Differentialgleichung erster Ordnung
+mit konstantem Zielwert \([Q]^*\) handelt und \(Q\) mit der
+Anfangskonzentration \([Q](0)=0\) initialisiert wird, ergibt sich die
+Lösung
 \begin{equation}
     [Q](t)
     =

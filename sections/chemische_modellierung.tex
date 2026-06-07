@@ -1,7 +1,6 @@
 \section{Chemische Modellierung}
 
-Nachdem im letzten Abschnitt die mathematischen Berechnungsvorschriften hergeleitet wurden, werden diese nun in ein chemisches Analogcomputermodell übersetzt. Dabei kodieren wir Zahlenwerte durch Konzentrationen chemischer Spezies. Die Berechnung erfolgt damit durch die zeitliche Entwicklung eines Reaktionssystems. Das Ziel ist es, ein Reaktionsnetzwerk zu konstruieren, dessen stabile Gleichgewichtskonzentrationen den gesuchten Rechenergebnissen entsprechen.Für eine Spezies \(X\), die gegen einen Zielwert \(g\) konvergieren soll,
-kann allgemein eine Dynamik der Form
+Nachdem im letzten Abschnitt die mathematischen Berechnungsvorschriften hergeleitet wurden, werden diese nun in ein chemisches Analogcomputermodell übersetzt. Dabei kodieren wir Zahlenwerte durch Konzentrationen chemischer Spezies. Die Berechnung erfolgt damit durch die zeitliche Entwicklung eines Reaktionssystems. Das Ziel ist es, ein Reaktionsnetzwerk zu konstruieren, dessen stabile Gleichgewichtskonzentrationen den gesuchten Rechenergebnissen entsprechen. Für eine Spezies \(X\), die gegen einen Zielwert \(g\) konvergieren soll, kann allgemein eine Dynamik der Form
 
 \begin{equation}
     \frac{d[X]}{dt}
@@ -207,7 +206,7 @@ der Eingabespezies \(S\) berechnet werden, sondern kann als konstante
 Ausgabengröße modelliert werden.
 
 Um auch hier eine Konzentration als Ausgabe zu verwenden und zugleich die
-Beschränkung der Ratenkonstanten einzuhalten, wird statt dem direkten Winkel im Bogenmaß der normierte Winkel
+Beschränkung der Ratenkonstanten einzuhalten, wird statt des direkten Winkels im Bogenmaß der normierte Winkel
 
 \begin{equation}
     \Theta_n
@@ -265,7 +264,7 @@ Dieses Modul wird durch eine konstante Produktion und einen linearen Abbau reali
     \Theta_n &\xrightarrow{[\Theta_n]} \varnothing.
 \end{aligned}
 \end{equation}
-Der tatsächliche Winkel kann aus der normierten Ausgabe durch multiplikation mit \(\pi\) zurückgewonnen werden. Es gilt 
+Der tatsächliche Winkel kann aus der normierten Ausgabe durch Multiplikation mit \(\pi\) zurückgewonnen werden. Es gilt 
 \begin{equation}
     \alpha_{\max}=\pi\Theta_n.
 \end{equation}
@@ -380,7 +379,5 @@ Anfangskonzentration \(0\) und konvergieren im Verlauf der Modellzeit gegen
 ihre jeweiligen Zielwerte. Die Simulationsergebnisse und die Bestimmung
 der chemischen Rechenzeit werden im folgenden Abschnitt untersucht. Zur Nachvollziehbarkeit der Implementierung sind Ausschnitte der relevanten
 COPASI-Funktionsdefinitionen und Reaktionseinstellungen im Anhang
-dokumentiert. Das vollständige Projekt inklusive COPASI-Modell und
-Auswertungsdateien ist zusätzlich öffentlich auf GitHub\footnote{\url{https://github.com/PatrickStahl/MolekulareAlgorithmen}} verfügbar.
-
+dokumentiert. 
 
