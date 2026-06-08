@@ -40,23 +40,19 @@ Damit gilt
     \frac{r}{s}.
 \end{equation}
 
-Folglich ergibt sich der Radius des angelagerten Halbkreises zu
+Folglich ergibt sich der Radius des angelagerten Halbkreises und die Höhe des Dreiecks zu
 
 \begin{equation}
     r
     =
-    s\sin\left(\frac{\alpha}{2}\right).
-    \label{eq:radius}
-\end{equation}
-
-Analog ergibt sich für die Höhe \(h\) des Dreiecks
-
-\begin{equation}
+    s\sin\left(\frac{\alpha}{2}\right)
+    ,
     h
     =
     s\cos\left(\frac{\alpha}{2}\right).
-    \label{eq:hoehe}
+    \label{eq:radius_und_hoehe}
 \end{equation}
+
 
 Diese beiden Beziehungen bilden die Grundlage für die Berechnung der
 Dreiecks- und Halbkreisfläche.
@@ -86,7 +82,7 @@ Zunächst wird die Fläche des Dreiecks betrachtet. Mit der Grundseite
     r h.
 \end{equation}
 
-Durch Einsetzen von \eqref{eq:radius} und \eqref{eq:hoehe} folgt
+Durch Einsetzen von \eqref{eq:radius_und_hoehe} folgt
 
 \begin{equation}
     A_{\mathrm{dreieck}}(\alpha)
@@ -96,7 +92,16 @@ Durch Einsetzen von \eqref{eq:radius} und \eqref{eq:hoehe} folgt
     \cos\left(\frac{\alpha}{2}\right).
 \end{equation}
 
-Mithilfe der trigonometrischen Identität ergibt sich
+Unter Verwendung der trigonometrischen Identität
+
+\[
+\sin(\alpha)
+=
+2\sin\left(\frac{\alpha}{2}\right)
+ \cos\left(\frac{\alpha}{2}\right)
+\]
+
+ergibt sich
 
 \begin{equation}
     A_{\mathrm{dreieck}}(\alpha)
@@ -274,7 +279,7 @@ Winkelbereich.
 \subsection{Maximaler Flächeninhalt}
 
 Zur Berechnung des maximalen Flächeninhalts wird
-\eqref{eq:alpha_max} in \eqref{eq:gesamtflaeche} eingesetzt. Setze dazu
+\eqref{eq:alpha_max} in \eqref{eq:gesamtflaeche} eingesetzt. Sei dazu
 
 \begin{equation}
     \beta
